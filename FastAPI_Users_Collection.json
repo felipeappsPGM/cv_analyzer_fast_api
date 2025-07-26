@@ -1,0 +1,422 @@
+{
+	"info": {
+		"_postman_id": "fastapi-users-collection",
+		"name": "FastAPI Users API",
+		"description": "Collection para testar todos os endpoints da API de usuários FastAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health & Info",
+			"item": [
+				{
+					"name": "Root - Info da API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": ["{{base_url}}"],
+							"path": [""]
+						}
+					}
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "API Docs (Swagger)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/docs",
+							"host": ["{{base_url}}"],
+							"path": ["docs"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users CRUD",
+			"item": [
+				{
+					"name": "1. Criar Usuário - Completo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Salvar user_id para usar em outras requisições",
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('user_id', response.user_id);",
+									"    console.log('User ID salvo:', response.user_id);",
+									"}",
+									"",
+									"// Testes",
+									"pm.test('Status code é 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Resposta contém user_id', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('user_id');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"João Silva\",\n  \"user_email\": \"joao.silva@exemplo.com\",\n  \"password\": \"MinhaSenh@123\",\n  \"is_work\": true,\n  \"user_type\": \"admin\",\n  \"birth_day\": \"1990-05-15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "2. Criar Usuário - Mínimo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"Maria Santos\",\n  \"user_email\": \"maria.santos@teste.com\",\n  \"password\": \"Senha123!\",\n  \"user_type\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "3. Listar Todos os Usuários",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "4. Listar Usuários - Com Paginação",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/?skip=0&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "5. Obter Usuário por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "{{user_id}}"]
+						}
+					}
+				},
+				{
+					"name": "6. Verificar se Usuário Existe",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/exists",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "{{user_id}}", "exists"]
+						}
+					}
+				},
+				{
+					"name": "7. Atualizar Usuário - Parcial",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"João Silva Atualizado\",\n  \"is_work\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "{{user_id}}"]
+						}
+					}
+				},
+				{
+					"name": "8. Atualizar Usuário - Completo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"João Silva Editado\",\n  \"user_email\": \"joao.editado@exemplo.com\",\n  \"is_work\": true,\n  \"user_type\": \"moderator\",\n  \"birth_day\": \"1990-06-20\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "{{user_id}}"]
+						}
+					}
+				},
+				{
+					"name": "9. Deletar Usuário (Soft Delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "{{user_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Testes de Erro",
+			"item": [
+				{
+					"name": "Criar Usuário - Email Duplicado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"Usuário Duplicado\",\n  \"user_email\": \"joao.silva@exemplo.com\",\n  \"password\": \"SenhaDuplicada123!\",\n  \"user_type\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "Criar Usuário - Email Inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"Teste Email Inválido\",\n  \"user_email\": \"email-invalido\",\n  \"password\": \"Senha123!\",\n  \"user_type\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "Criar Usuário - Senha Muito Curta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"Teste Senha Curta\",\n  \"user_email\": \"senha.curta@teste.com\",\n  \"password\": \"123\",\n  \"user_type\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", ""]
+						}
+					}
+				},
+				{
+					"name": "Buscar Usuário - ID Inexistente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/00000000-0000-0000-0000-000000000000",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "00000000-0000-0000-0000-000000000000"]
+						}
+					}
+				},
+				{
+					"name": "Atualizar Usuário - ID Inexistente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_name\": \"Tentativa de Update\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/00000000-0000-0000-0000-000000000000",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "00000000-0000-0000-0000-000000000000"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Casos de Teste Especiais",
+			"item": [
+				{
+					"name": "Criar Múltiplos Usuários",
+					"item": [
+						{
+							"name": "Usuário Admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_name\": \"Admin Sistema\",\n  \"user_email\": \"admin@sistema.com\",\n  \"password\": \"AdminSenh@123\",\n  \"is_work\": true,\n  \"user_type\": \"admin\",\n  \"birth_day\": \"1985-01-01\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", ""]
+								}
+							}
+						},
+						{
+							"name": "Usuário Moderador",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_name\": \"Moderador Teste\",\n  \"user_email\": \"mod@teste.com\",\n  \"password\": \"ModSenh@456\",\n  \"is_work\": true,\n  \"user_type\": \"moderator\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", ""]
+								}
+							}
+						},
+						{
+							"name": "Usuário Comum",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"user_name\": \"Usuário Comum\",\n  \"user_email\": \"user@comum.com\",\n  \"password\": \"UserSenh@789\",\n  \"is_work\": false,\n  \"user_type\": \"user\",\n  \"birth_day\": \"1995-12-25\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

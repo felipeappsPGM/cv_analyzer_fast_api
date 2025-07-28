@@ -42,8 +42,12 @@ class AcademicBackground(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="academic_backgrounds", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="academic_backgrounds", lazy="select")
     
     def __repr__(self):
         return f"<AcademicBackground(academic_background_id={self.academic_background_id}, degree='{self.degree_name}', institution='{self.institution_name}')>"

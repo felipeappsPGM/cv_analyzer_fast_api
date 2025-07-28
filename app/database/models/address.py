@@ -51,9 +51,15 @@ class Address(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # company = relationship("Company", back_populates="addresses", lazy="select")
-    # user = relationship("User", back_populates="addresses", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # Company relationship
+    company = relationship("Company", foreign_keys=[company_id], back_populates="addresses", lazy="select")
+    
+    # User relationship  
+    user = relationship("User", foreign_keys=[user_id], back_populates="addresses", lazy="select")
     
     @property
     def full_address(self):

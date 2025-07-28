@@ -51,11 +51,21 @@ class ApplicationJob(Base):
         UniqueConstraint('user_id', 'job_id', name='uq_user_job_application'),
     )
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="applications", lazy="select")
-    # job = relationship("Job", back_populates="applications", lazy="select")
-    # professional_profile = relationship("ProfessionalProfile", back_populates="applications", lazy="select")
-    # analysis = relationship("AnalyzeApplicationJob", back_populates="application", uselist=False, lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="applications", lazy="select")
+    
+    # Job relationship
+    job = relationship("Job", back_populates="applications", lazy="select")
+    
+    # Professional Profile relationship
+    professional_profile = relationship("ProfessionalProfile", back_populates="applications", lazy="select")
+    
+    # Analysis relationship (one-to-one)
+    analysis = relationship("AnalyzeApplicationJob", back_populates="application", uselist=False, lazy="select", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<ApplicationJob(application_job_id={self.application_job_id}, user_id={self.user_id}, job_id={self.job_id})>"

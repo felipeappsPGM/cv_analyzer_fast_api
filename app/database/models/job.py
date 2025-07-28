@@ -41,9 +41,15 @@ class Job(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # company = relationship("Company", back_populates="jobs", lazy="select")
-    # applications = relationship("ApplicationJob", back_populates="job", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # Company relationship
+    company = relationship("Company", back_populates="jobs", lazy="select")
+    
+    # Applications relationship
+    applications = relationship("ApplicationJob", back_populates="job", lazy="select", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Job(job_id={self.job_id}, job_name='{self.job_name}', code_vacancy_job='{self.code_vacancy_job}')>"

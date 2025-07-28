@@ -34,10 +34,18 @@ class Company(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # users = relationship("User", back_populates="company", lazy="select")
-    # jobs = relationship("Job", back_populates="company", lazy="select") 
-    # address = relationship("Address", back_populates="companies", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # Users relationship
+    users = relationship("User", back_populates="company", lazy="select")
+    
+    # Jobs relationship
+    jobs = relationship("Job", back_populates="company", lazy="select", cascade="all, delete-orphan")
+    
+    # Addresses relationship
+    addresses = relationship("Address", foreign_keys="Address.company_id", back_populates="company", lazy="select", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<Company(company_id={self.company_id}, company_name='{self.company_name}', cnpj='{self.cnpj}')>"

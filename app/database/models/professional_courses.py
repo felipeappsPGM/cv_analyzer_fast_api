@@ -48,8 +48,12 @@ class ProfessionalCourses(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="professional_courses", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="professional_courses", lazy="select")
     
     def __repr__(self):
         return f"<ProfessionalCourses(professional_courses_id={self.professional_courses_id}, course='{self.course_name}', institution='{self.institution_name}')>"

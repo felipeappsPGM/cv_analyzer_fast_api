@@ -304,7 +304,7 @@ class ProfessionalCoursesStatistics(BaseModel):
 # =============================================
 class CertificateUpload(BaseModel):
     """Schema para upload de certificado"""
-    file_type: str = Field(..., regex="^(pdf|image)$", description="Tipo do arquivo")
+    file_type: str = Field(..., pattern="^(pdf|image)$", description="Tipo do arquivo")
     file_data: bytes = Field(..., description="Dados do arquivo")
     file_name: str = Field(..., max_length=255, description="Nome do arquivo")
 

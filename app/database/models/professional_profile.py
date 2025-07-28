@@ -41,13 +41,18 @@ class ProfessionalProfile(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="professional_profiles", lazy="select")
-    # experiences = relationship("ProfessionalExperience", back_populates="profile", lazy="select")
-    # academic_backgrounds = relationship("AcademicBackground", back_populates="profile", lazy="select")
-    # courses = relationship("ProfessionalCourses", back_populates="profile", lazy="select")
-    # applications = relationship("ApplicationJob", back_populates="professional_profile", lazy="select")
-    # analyses = relationship("AnalyzeApplicationJob", back_populates="professional_profile", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="professional_profiles", lazy="select")
+    
+    # Application relationship
+    applications = relationship("ApplicationJob", back_populates="professional_profile", lazy="select", cascade="all, delete-orphan")
+    
+    # Analysis relationship
+    analyses = relationship("AnalyzeApplicationJob", back_populates="professional_profile", lazy="select", cascade="all, delete-orphan")
     
     def __repr__(self):
         return f"<ProfessionalProfile(professional_profile_id={self.professional_profile_id}, name='{self.professional_profile_name}')>"

@@ -45,15 +45,32 @@ class AnalyzeApplicationJob(Base):
         index=True
     )
     
+    # Application job relationship (optional)
+    application_job_id = Column(
+        UUID(as_uuid=True), 
+        ForeignKey('application_jobs.application_job_id', ondelete='CASCADE'),
+        nullable=True,
+        index=True
+    )
+    
     # Audit Fields
     created_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_date = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="analyses", lazy="select")
-    # professional_profile = relationship("ProfessionalProfile", back_populates="analyses", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="analyses", lazy="select")
+    
+    # Professional Profile relationship
+    professional_profile = relationship("ProfessionalProfile", back_populates="analyses", lazy="select")
+    
+    # Application relationship (optional)
+    application = relationship("ApplicationJob", back_populates="analysis", lazy="select")
     
     def calculate_total_score(self):
         """

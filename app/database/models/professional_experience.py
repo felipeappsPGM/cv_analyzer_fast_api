@@ -43,8 +43,12 @@ class ProfessionalExperience(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     create_user_id = Column(UUID(as_uuid=True), nullable=True)
     
-    # Relationships (will be defined after all models are created)
-    # user = relationship("User", back_populates="professional_experiences", lazy="select")
+    # =============================================
+    # RELATIONSHIPS
+    # =============================================
+    
+    # User relationship
+    user = relationship("User", back_populates="professional_experiences", lazy="select")
     
     def __repr__(self):
         return f"<ProfessionalExperience(professional_experience_id={self.professional_experience_id}, job_title='{self.job_title}', company='{self.company_name}')>"
